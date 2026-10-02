@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portafolio Mathias</title>
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #050b07;
+      --panel-bg: rgba(6, 14, 9, 0.84);
+      --green-bright: #00ff66;
+      --green-lime: #a6ff00;
+      --green-muted: #3a683e;
+      --yellow-bright: #ffd700;
+      --yellow-soft: #f4ff9e;
+      --mint: #7dffb0;
+      --orange: #ff9466;
+      --text-color: #d8f5d0;
+      --border-color: #27472a;
+
+      --sand-h: clamp(70px, 14vh, 150px);
+      --sea-h: clamp(120px, 24vh, 260px);
+
+      --t-xs: .2s;
+      --t-sm: .35s;
+      --t-md: .55s;
+      --t-lg: .8s;
+      --t-xl: 1.05s;
+      --ease: cubic-bezier(.22, .8, .28, 1);
+      --stagger: .13s;
+
+      --nav-h: 42px;
+      --nav-gap: calc(var(--nav-h) + 28px);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { overflow-x: hidden; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Fira Code', 'Courier New', Courier, monospace;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(rgba(18, 16, 26, 0) 50%, rgba(0, 0, 0, 0.22) 50%);
+      background-size: 100% 4px;
+      z-index: 100;
+      pointer-events: none;
+      opacity: 0.45;
+    }
+
+    .text-green  { color: var(--green-bright); }
+    .text-lime   { color: var(--green-lime); }
+    .text-yellow { color: var(--yellow-bright); }
+    .text-soft   { color: var(--yellow-soft); }
+    .text-muted  { color: var(--green-muted); }
+    .text-mint   { color: var(--mint); }
+    .text-orange { color: var(--orange); }
+
+    pre { font-family: inherit; }
+
+    #background-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    #sky { position: absolute; inset: 0; background: linear-gradient(#082c22, #60741a); }
+
+    #stars { position: absolute; inset: 0 0 35% 0; z-index: 1; }
+    #stars i {
+      position: absolute;
+      font-style: normal;
+      color: var(--yellow-soft);
+      animation: pulse 2.4s infinite alternate ease-in-out;
+    }
+
+    #aurora {
+      position: absolute;
+      left: -10%; right: -10%; top: 0;
+      height: 60%;
+      z-index: 1;
+      opacity: 0;
+      filter: blur(24px);
+      mix-blend-mode: screen;
+      background:
+        linear-gradient(100deg, transparent 5%, rgba(0,255,102,.55) 28%, rgba(166,255,0,.35) 45%, transparent 62%),
+        linear-gradient(80deg, transparent 30%, rgba(125,255,176,.35) 55%, transparent 80%);
+      animation: aurora 12s ease-in-out infinite alternate;
+    }
+    @keyframes aurora {
+      from { transform: skewX(-8deg) translateX(-4%); }
+      to   { transform: skewX(10deg) translateX(5%); }
+    }
+
+    .moon { position: absolute; z-index: 1; opacity: 0; color: var(--yellow-soft); text-shadow: 0 0 10px currentColor; line-height: 1.05; }
+    #moon-large { top: 17%; right: 12%; font-size: 15px; }
+    #moon-small { top: 30%; right: 26%; font-size: 10px; color: var(--mint); }
+
+    #ringed-planet {
+      position: absolute;
+      left: 0; top: 0;
+      z-index: 2;
+      color: var(--green-lime);
+      font-size: clamp(11px, 1.5vw, 17px);
+      line-height: 1.1;
+      text-shadow: 0 0 12px rgba(166,255,0,.5);
+      opacity: 0;
+      will-change: transform;
+    }
+
+    .sun { position: absolute; left: 0; top: 0; z-index: 3; will-change: transform; line-height: 1; }
+    .sun::before {
+      content: "";
+      position: absolute;
+      inset: -60%;
+      border-radius: 50%;
+      background: radial-gradient(circle, currentColor 0%, transparent 62%);
+      opacity: .22;
+    }
+    .sun pre { position: relative; text-shadow: 0 0 10px currentColor, 0 0 26px currentColor; }
+    #sun-yellow { color: var(--yellow-bright); font-size: clamp(12px, 1.6vw, 18px); }
+    #sun-orange { color: var(--orange);        font-size: clamp(10px, 1.3vw, 15px); }
+    #sun-mint { color: var(--mint);          font-size: clamp(9px, 1.1vw, 13px); }
+
+    #sea {
+      position: absolute;
+      left: 0; right: 0;
+      bottom: var(--sand-h);
+      height: var(--sea-h);
+      z-index: 4;
+      overflow: hidden;
+      background: linear-gradient(var(--sea-a, #0f4a34), var(--sea-b, #06231a));
+      border-top: 1px solid rgba(244, 255, 158, .35);
+    }
+    .wave-row {
+      position: absolute;
+      left: -400px;
+      white-space: pre;
+      font-size: 14px;
+      line-height: 1;
+      will-change: transform;
+    }
+    .wave-row span { display: inline-block; animation: drift 6s ease-in-out infinite alternate; }
+    @keyframes drift { from { transform: translateX(-14px); } to { transform: translateX(14px); } }
+
+    .sun-reflection { position: absolute; top: 0; transform: translateX(-50%); opacity: 0; font-size: 12px; line-height: 1.05; white-space: pre; }
+    .sun-reflection pre { animation: shimmer 1.6s ease-in-out infinite alternate; text-shadow: 0 0 8px currentColor; }
+    @keyframes shimmer { from { transform: scaleX(.85); opacity: .7; } to { transform: scaleX(1.1); opacity: 1; } }
+
+    #sand {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: var(--sand-h);
+      z-index: 5;
+      background:
+        radial-gradient(circle, rgba(255, 215, 0, .28) 1px, transparent 1.6px) 0 0 / 11px 11px,
+        linear-gradient(#3b3a0f, #17170a);
+      border-top: 1px solid rgba(255, 215, 0, .4);
+      overflow: hidden;
+    }
+    #sand .sand-foam { position: absolute; top: 2px; left: -20px; white-space: pre; font-size: 12px; color: var(--yellow-soft); opacity: .55; }
+
+    #beach-person {
+      position: absolute;
+      left: 50%;
+      bottom: calc(var(--sand-h) * .12);
+      transform: translateX(-50%);
+      z-index: 6;
+      font-size: clamp(10px, 1.5vh + 4px, 15px);
+      line-height: 1.1;
+      text-shadow: 0 0 10px rgba(0, 255, 102, .25);
+    }
+
+    .palm {
+      position: absolute;
+      bottom: calc(var(--sand-h) * .2);
+      z-index: 6;
+      font-size: clamp(10px, 1.5vh + 3px, 14px);
+      line-height: 1.1;
+      color: var(--green-bright);
+      transform-origin: 50% 100%;
+      animation: sway 5s ease-in-out infinite alternate;
+    }
+    #palm-left { left: 2%; }
+    #palm-right { right: 2%; animation-delay: -2.5s; }
+    @keyframes sway { from { transform: rotate(-2.5deg); } to { transform: rotate(2.5deg); } }
+
+    #fireflies { position: absolute; inset: 0; z-index: 6; opacity: 0; }
+    #fireflies i {
+      position: absolute;
+      font-style: normal;
+      color: var(--green-lime);
+      text-shadow: 0 0 8px var(--green-lime);
+      animation: float 6s ease-in-out infinite alternate;
+    }
+    @keyframes float {
+      from { transform: translate(0, 0); opacity: .3; }
+      to   { transform: translate(24px, -18px); opacity: 1; }
+    }
+
+    #progress-bar {
+      position: fixed; top: 0; left: 0;
+      height: 3px; width: 0;
+      z-index: 30;
+      background: linear-gradient(90deg, var(--yellow-bright), var(--green-lime));
+      box-shadow: 0 0 8px var(--yellow-bright);
+    }
+    #top-bar {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 20;
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      padding: 12px 16px;
+      font-size: .78rem;
+      background: linear-gradient(rgba(3, 8, 5, .88), rgba(3, 8, 5, 0));
+    }
+    #top-bar .site-title { color: var(--yellow-bright); font-weight: 600; }
+    #top-bar .upper-buttons { display: flex; gap: 4px; }
+    #top-bar a { border: 0; margin: 0 6px; color: var(--green-lime); }
+    #top-bar a:hover { color: var(--yellow-bright); }
+
+    #home, .central-container > section[id] { scroll-margin-top: var(--nav-gap); }
+
+    .central-container { position: relative; z-index: 2; padding-bottom: 70px; }
+
+    h1 { font-size: 1.6rem; }
+    h2 { font-size: 1.15rem; margin-bottom: 16px; }
+    p  { line-height: 1.65; font-size: .95rem; margin-bottom: 12px; }
+
+    a {
+      color: var(--yellow-bright);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--yellow-bright);
+      transition: color var(--t-xs), border-color var(--t-xs);
+    }
+    a:hover { color: var(--green-lime); border-color: var(--green-lime); }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--green-lime); outline-offset: 3px; }
+
+    .content-panel {
+      position: relative;
+      width: min(900px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 26px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      box-shadow: 0 0 25px rgba(0, 255, 102, .08);
+    }
+
+    .ascii-box {
+      border: 1px solid var(--border-color);
+      background: rgba(8, 15, 9, .6);
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 4px;
+    }
+
+    .typing-cursor {
+      display: inline-block;
+      width: 8px; height: 15px;
+      background-color: var(--green-bright);
+      vertical-align: middle;
+      animation: blink .8s infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    @keyframes pulse { 0% { opacity: .2; } 100% { opacity: 1; } }
+
+    .intro-section {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 9vh 16px 0;
+      text-align: center;
+    }
+    .intro-content { display: flex; flex-direction: column; align-items: center; gap: 6px; will-change: transform, opacity; }
+    .intro-section h1 { font-size: clamp(1.6rem, 4.5vw, 2.6rem); text-shadow: 0 0 14px rgba(255, 215, 0, .5); }
+    .intro-section .role { margin: 0; text-shadow: 0 0 8px rgba(0, 0, 0, .8); }
+    .intro-section .school-name { margin: 0; font-size: .78rem; color: var(--yellow-soft); text-shadow: 0 0 8px rgba(0,0,0,.9); }
+    .intro-section .scroll-hint { margin: 10px 0 0; font-size: .78rem; color: var(--green-lime); text-shadow: 0 0 8px rgba(0,0,0,.9); animation: nudge 1.6s ease-in-out infinite alternate; }
+    @keyframes nudge { from { transform: translateY(0); } to { transform: translateY(6px); } }
+
+    .photo-frame {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      padding: 0;
+      border: 1px solid var(--yellow-bright);
+      background: rgba(0, 0, 0, .45);
+      color: inherit;
+      font: inherit;
+      cursor: default;
+      overflow: hidden;
+      box-shadow: 0 0 18px rgba(255, 215, 0, .15);
+    }
+    .photo-frame.no-image { cursor: pointer; }
+    .photo-frame.wide { aspect-ratio: 16 / 9; }
+    .photo-frame img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .photo-frame .photo-placeholder {
+      display: none;
+      position: absolute; inset: 0;
+      align-items: center; justify-content: center;
+      flex-direction: column; gap: 4px;
+      padding: 10px;
+      text-align: center;
+      font-size: .8rem;
+      line-height: 1.5;
+      color: var(--yellow-soft);
+      background: repeating-linear-gradient(45deg, rgba(0, 255, 102, .05) 0 8px, transparent 8px 16px);
+    }
+    .photo-frame .photo-placeholder small { color: var(--green-lime); font-size: .68rem; }
+    .photo-frame.no-image .photo-placeholder { display: flex; }
+    .photo-frame.no-image img { display: none; }
+
+    .profile-photo-small { width: 96px; }
+    .profile-photo-small .photo-placeholder small { display: none; }
+
+    .about-layout { display: grid; grid-template-columns: 220px 1fr; gap: 22px; align-items: start; }
+    @media (max-width: 640px) {
+      .about-layout { grid-template-columns: 1fr; }
+      .about-layout figure { max-width: 240px; margin: 0 auto; }
+    }
+
+    .certificates-toggle {
+      display: flex; align-items: center; gap: 12px;
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(8, 15, 9, .6);
+      border: 1px solid var(--yellow-bright);
+      border-radius: 4px;
+      color: var(--yellow-bright);
+      font: inherit; font-size: .95rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background var(--t-sm), box-shadow var(--t-sm);
+    }
+    .certificates-toggle:hover { background: rgba(255, 215, 0, .08); box-shadow: inset 0 0 18px rgba(255, 215, 0, .12); }
+    .certificates-toggle .certificates-count { margin-left: auto; color: var(--green-lime); }
+
+    .certificates-drawer {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows var(--t-md) cubic-bezier(.4, 0, .2, 1);
+    }
+    .certificates-drawer.open { grid-template-rows: 1fr; }
+    .certificates-inner {
+      min-height: 0;
+      overflow: hidden;
+      visibility: hidden;
+      transition: visibility 0s linear var(--t-md);
+    }
+    .certificates-drawer.open .certificates-inner { visibility: visible; transition-delay: 0s; }
+
+    .certificates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      padding-top: 18px;
+    }
+    .certificate-card {
+      padding: 14px;
+      border: 1px solid var(--border-color);
+      background: rgba(8, 15, 9, .6);
+      border-radius: 4px;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity var(--t-md) ease, transform var(--t-md) ease;
+    }
+    .certificates-drawer.open .certificate-card {
+      opacity: 1;
+      transform: none;
+      transition-delay: calc(var(--t-sm) + var(--i, 0) * var(--stagger));
+    }
+    .certificate-card .photo-frame { aspect-ratio: 4 / 3; }
+    .certificate-card .photo-frame img { object-fit: contain; }
+    .certificate-info { margin-top: 10px; }
+    .certificate-info p { margin: 4px 0 8px; }
+
+    .certificate-url-box { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 12px; }
+    .certificate-url-input {
+      width: 100%;
+      min-width: 0;
+      padding: 7px 9px;
+      font: inherit;
+      font-size: .76rem;
+      color: var(--yellow-soft);
+      background: rgba(0, 0, 0, .35);
+      border: 1px dashed var(--border-color);
+      border-radius: 3px;
+      transition: border-color var(--t-xs);
+    }
+    .certificate-url-input::placeholder { color: var(--green-muted); }
+    .certificate-url-input:focus { outline: none; border-style: solid; border-color: var(--green-lime); }
+    .certificate-link { font-size: .8rem; }
+    .certificate-link[hidden] { display: none; }
+
+    .skill-bar { white-space: pre; overflow-x: auto; font-size: .85rem; }
+    .skill-item + .skill-item { margin-top: 16px; }
+
+    .contact-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .contact-header h2 { margin: 0; }
+    .signal-icon { color: var(--green-lime); font-style: normal; letter-spacing: 1px; white-space: nowrap; }
+    .signal-icon i { font-style: normal; animation: ping 1.8s ease-in-out infinite; }
+    .signal-icon .signal-mid { animation-delay: .35s; }
+    .signal-icon .signal-center { animation-delay: .7s; }
+    @keyframes ping { 0%, 100% { opacity: .15; } 50% { opacity: 1; } }
+
+    .contact-list { display: grid; gap: 12px; margin-top: 8px; }
+    .contact-link {
+      position: relative;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      border: 1px solid var(--border-color);
+      background: rgba(8, 15, 9, .6);
+      border-radius: 4px;
+      color: var(--text-color);
+      overflow: hidden;
+    }
+    .contact-link:hover { border-color: var(--yellow-bright); box-shadow: inset 0 0 18px rgba(255, 215, 0, .12); transform: translateX(6px); color: var(--text-color); }
+    .contact-icon { color: var(--yellow-bright); font-weight: 600; min-width: 2.4ch; }
+    .contact-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .contact-text small { color: var(--green-lime); font-size: .72rem; }
+    .contact-text span { color: var(--yellow-soft); overflow-wrap: anywhere; }
+    .contact-arrow { color: var(--yellow-bright); transition: transform var(--t-sm); }
+    .contact-link:hover .contact-arrow { transform: translateX(6px); }
+    .contact-link::after {
+      content: "";
+      position: absolute; top: 0; bottom: 0; left: -40%;
+      width: 35%;
+      background: linear-gradient(100deg, transparent, rgba(244, 255, 158, .25), transparent);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .js .reveal-beam {
+      clip-path: inset(0 100% 0 0);
+      opacity: 0;
+      transition:
+        clip-path var(--t-xl) var(--ease) var(--d, 0s),
+        opacity var(--t-sm) ease var(--d, 0s),
+        transform var(--t-xs) ease, border-color var(--t-xs), box-shadow var(--t-xs);
+    }
+    .js .reveal-beam.active { clip-path: inset(0 0 0 0); opacity: 1; }
+    .js .reveal-beam.active::after { animation: shine 1.5s ease-out calc(var(--d, 0s) + var(--t-xl)) 1 both; }
+    @keyframes shine {
+      0%   { opacity: 1; left: -40%; }
+      100% { opacity: 1; left: 120%; }
+    }
+
+    .js .scroll-reveal {
+      opacity: 0;
+      transform: translateY(34px);
+      transition: opacity var(--t-lg) ease-out var(--d, 0s), transform var(--t-lg) var(--ease) var(--d, 0s);
+    }
+    .js .scroll-reveal.from-left  { transform: translateX(-50px); }
+    .js .scroll-reveal.from-right { transform: translateX(50px); }
+    .js .scroll-reveal.zoom-in       { transform: scale(.92); }
+    .js .scroll-reveal.active     { opacity: 1; transform: none; }
+
+    .scene-transition { position: relative; height: 120vh; }
+    .scene-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+
+    .ufo {
+      position: absolute;
+      top: 24vh; left: 0;
+      color: var(--green-lime);
+      font-size: 13px; line-height: 1.1;
+      text-shadow: 0 0 10px rgba(166, 255, 0, .6);
+      transform: translateX(calc(var(--lp, 0) * (100vw + 300px) - 300px));
+    }
+    .ufo pre { animation: hover 1.8s ease-in-out infinite alternate; }
+    @keyframes hover { from { transform: translateY(-8px) rotate(-3deg); } to { transform: translateY(8px) rotate(3deg); } }
+    .tractor-beam {
+      position: absolute;
+      top: 100%; left: 50%;
+      width: 170px;
+      margin-left: -85px;
+      height: calc(76vh - 57px - var(--sand-h) * .6);
+      pointer-events: none;
+      animation: flicker 1.3s ease-in-out infinite alternate;
+    }
+    .tractor-beam .beam-cone {
+      position: absolute; inset: 0;
+      clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%);
+      background: linear-gradient(rgba(166, 255, 0, .5), rgba(166, 255, 0, .04));
+    }
+    .tractor-beam .beam-spot {
+      position: absolute; left: -6%; right: -6%; bottom: -6px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(166, 255, 0, .4);
+      filter: blur(4px);
+    }
+    @keyframes flicker { from { opacity: .55; } to { opacity: 1; } }
+
+    .bird-flock {
+      --q: clamp(0, calc(var(--lp, 0) * 1.3 - var(--o, 0)), 1);
+      position: absolute;
+      left: 0; top: var(--top, 20vh);
+      color: var(--yellow-soft);
+      font-size: 14px; line-height: 1.1;
+      text-shadow: 0 0 6px rgba(0, 0, 0, .6);
+      transform:
+        translate(calc(var(--q) * (100vw + 360px) - 360px), calc(var(--q) * 7vh))
+        scale(var(--s, 1));
+    }
+    .bird-flock .flock-frame-two { position: absolute; inset: 0; }
+    .bird-flock .flock-frame-one { animation: step1 .6s steps(1) infinite; }
+    .bird-flock .flock-frame-two { animation: step2 .6s steps(1) infinite; }
+    @keyframes step1 { 0% { opacity: 1; } 50% { opacity: 0; } }
+    @keyframes step2 { 0% { opacity: 0; } 50% { opacity: 1; } }
+
+    .fish {
+      --q: clamp(0, calc(var(--lp, 0) * 1.4 - var(--o, 0)), 1);
+      position: absolute;
+      left: 0;
+      bottom: calc(var(--sand-h) + var(--sea-h) * var(--b, .3));
+      color: var(--mint);
+      font-size: 15px;
+      white-space: pre;
+      text-shadow: 0 0 8px currentColor;
+      transform:
+        translate(calc(var(--q) * (100vw + 220px) - 220px), calc(var(--q) * (1 - var(--q)) * var(--jump, -64vh)))
+        rotate(calc((var(--q) - .5) * 80deg));
+    }
+
+    .meteor {
+      --q: clamp(0, calc(var(--lp, 0) * 1.6 - var(--o, 0)), 1);
+      position: absolute;
+      left: var(--x); top: var(--y);
+      white-space: pre;
+      font-size: 14px; line-height: 1;
+      opacity: calc(clamp(0, calc(var(--q) * 6), 1) * clamp(0, calc((1 - var(--q)) * 6), 1));
+      transform: translate(calc(var(--q) * 46vw), calc(var(--q) * 28vh)) rotate(31deg);
+      background: linear-gradient(90deg, transparent, var(--yellow-soft) 80%, #fff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 4px rgba(244, 255, 158, .8));
+    }
+
+    @media (max-width: 700px) {
+      #top-bar .upper-buttons { display: none; }
+      .palm { display: none; }
+      .content-panel { padding: 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .js .scroll-reveal { opacity: 1; transform: none; }
+      .js .reveal-beam { clip-path: none; opacity: 1; }
+      .bird-flock .flock-frame-two { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="background-scene" aria-hidden="true">
+    <div id="sky"></div>
+    <div id="aurora"></div>
+    <div id="stars"></div>
+
+    <div class="moon" id="moon-large"><pre>  .-.
+ (   )
+  '-'</pre></div>
+    <div class="moon" id="moon-small"><pre> .-.
+ '-'</pre></div>
+
+    <div id="ringed-planet"><pre>      _.-'''''-._
+ .-=~~'         '~~=-.
+(___   .:::::::.   ___)
+      '~:::::::~'
+        '-...-'</pre></div>
+
+    <div class="sun" id="sun-yellow"><pre>      .:::::::.
+    .:::::::::::.
+   :::::::::::::::
+   :::::::::::::::
+    ':::::::::::'
+      ':::::::'</pre></div>
+    <div class="sun" id="sun-orange"><pre>   .:::.
+  :::::::
+  :::::::
+   ':::'</pre></div>
+    <div class="sun" id="sun-mint"><pre>  .::.
+  '::'</pre></div>
+
+    <div id="sea">
+      <div class="sun-reflection text-yellow"><pre> ::::::
+  ::::
+ :::::
+  :::
+ ::::
+  ::</pre></div>
+      <div class="sun-reflection text-orange"><pre> :::::
+  :::
+ ::::
+  ::
+ :::</pre></div>
+      <div class="sun-reflection text-mint"><pre> ::::
+  ::
+ :::
+  :</pre></div>
+    </div>
+
+    <div id="sand"><div class="sand-foam"></div></div>
+
+    <pre class="palm" id="palm-left">   \\  |  //
+    \\ | //
+  ~~--(*)--~~
+       |
+       |
+       |
+      /|</pre>
+    <pre class="palm" id="palm-right">   \\  |  //
+    \\ | //
+  ~~--(*)--~~
+       |
+       |
+       |
+      /|</pre>
+
+    <pre id="beach-person"><span class="text-yellow">     .-"""""-.
+_.-'''''''''''''-._</span>
+<span class="text-lime">       (   )
+       '---'
+    .-'|||||'-.
+   /  |||||||  \</span>
+<span class="text-green">  |==|||||||||==|
+  |  |||||||||  |
+  |==|||||||||==|
+  |__|||||||||__|
+   /|         |\
+  / |         | \</span></pre>
+
+    <div id="fireflies"></div>
+  </div>
+
+  <div id="progress-bar"></div>
+
+  <nav id="top-bar">
+    <span class="site-title">/// Portafolio</span>
+    <span class="upper-buttons">
+      <a href="#about-me">sobre_mí</a>
+      <a href="#certificates">certificados</a>
+      <a href="#skills">habilidades</a>
+      <a href="#contact">contacto</a>
+    </span>
+  </nav>
+
+  <input type="file" id="photo-picker" accept="image/*" hidden>
+
+  <main class="central-container">
+
+    <header class="intro-section" id="home">
+      <div class="intro-content">
+
+        <button type="button" class="photo-frame profile-photo-small" data-group="perfil" aria-label="Foto de perfil">
+          <img class="photo-image" src="img/profile/blackhole.png" alt="Foto de perfil">
+          <span class="photo-placeholder">foto</span>
+        </button>
+
+        <h1 class="text-yellow">&lt;MATHIAS CRUZ&gt;</h1>
+        <p class="role text-lime">Estudiante de  <span id="typed-text"></span><span class="typing-cursor"></span></p>
+        <p class="school-name">Escuela Politecnica Nacional</p>
+        <p class="scroll-hint">&#9660; haz scroll para ver más...</p>
+      </div>
+    </header>
+
+    <section class="scene-transition" id="transition-ufo" aria-hidden="true">
+      <div class="scene-stage">
+        <div class="ufo">
+          <pre>      .-"""-.
+   _/ o  o  o \_
+  '-._________.-'
+      ' ' ' '</pre>
+          <div class="tractor-beam"><div class="beam-cone"></div><div class="beam-spot"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-panel scroll-reveal" id="about-me">
+      <h2 class="text-yellow">[ SOBRE_MÍ ]</h2>
+      <div class="about-layout">
+        <figure>
+          <button type="button" class="photo-frame" data-group="perfil" aria-label="Foto de perfil">
+            <img class="photo-image" src="img/profile/blackhole.png" alt="Foto de perfil">
+            <span class="photo-placeholder">foto<small>img/profile/blackhole.png</small><small>(clic = vista previa)</small></span>
+          </button>
+        </figure>
+        <div>
+          <div class="ascii-box">
+            <p>¡Hola! Soy Mathias Cruz, estudiante de Ciencias de la Computación en la Escuela Politécnica Nacional.</p>
+            <p>Tengo una pasión por las tecnologías relacionadas con el mundo de la computación, especialmente en el desarrollo y mantenimiento de sistemas operativos basados en GNU/Linux, además de el estudio de Ciberseguridad y Computación Cuántica.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene-transition" id="transition-birds" aria-hidden="true">
+      <div class="scene-stage">
+        <div class="bird-flock" style="--o:0; --top:20vh; --s:1">
+          <pre class="flock-frame-one">        \./
+      \./ \./
+    \./     \./</pre>
+          <pre class="flock-frame-two">        -v-
+      -v- -v-
+    -v-     -v-</pre>
+        </div>
+        <div class="bird-flock" style="--o:.18; --top:36vh; --s:.72">
+          <pre class="flock-frame-one">        \./
+      \./ \./
+    \./     \./</pre>
+          <pre class="flock-frame-two">        -v-
+      -v- -v-
+    -v-     -v-</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-panel scroll-reveal" id="certificates">
+      <h2 class="text-yellow">[ CERTIFICADOS ]</h2>
+      <p>Cursos que he completado.</p>
+      <button type="button" class="certificates-toggle" id="certificates-button" aria-expanded="false" aria-controls="certificates-content">
+        <span class="toggle-icon">[+]</span>
+        <span class="toggle-label">Ver certificados</span>
+        <span class="certificates-count">(2)</span>
+      </button>
+
+      <div class="certificates-drawer" id="certificates-content">
+        <div class="certificates-inner">
+          <div class="certificates-grid">
+
+            <article class="certificate-card" style="--i:0">
+              <button type="button" class="photo-frame" data-group="c1" aria-label="Imagen del certificado 1">
+                <img class="photo-image" src="img/certs/cert1.jpg" alt="Certificado 1">
+                <span class="photo-placeholder">[ CERTIFICADO ]<small>img/certs/cert1.jpg</small></span>
+              </button>
+              <div class="certificate-url-box">
+                <input class="certificate-url-input" type="url" data-cert="c1" placeholder="url de la página emisora" aria-label="URL de la página emisora del certificado 1" spellcheck="false" autocomplete="off">
+                <a class="certificate-link" data-cert="c1" href="https://hack4u.io/check-certificate/" target="_blank" rel="noopener" hidden>[Ver credencial]</a>
+              </div>
+              <div class="certificate-info">
+                <strong class="text-green">Introducción a Linux</strong>
+                <p class="text-soft">Hack4u // 2023</p>
+              </div>
+            </article>
+
+            <article class="certificate-card" style="--i:1">
+              <button type="button" class="photo-frame" data-group="c2" aria-label="Imagen del certificado 2">
+                <img class="photo-image" src="img/certs/cert2.jpg" alt="Certificado 2">
+                <span class="photo-placeholder">[ CERTIFICADO ]<small>img/certs/cert2.jpg</small></span>
+              </button>
+              <div class="certificate-url-box">
+                <input class="certificate-url-input" type="url" data-cert="c2" placeholder="url de la página emisora" aria-label="URL de la página emisora del certificado 2" spellcheck="false" autocomplete="off">
+                <a class="certificate-link" data-cert="c2" href="https://hacker-mentor.com/" target="_blank" rel="noopener" hidden>[Ver credencial]</a>
+              </div>
+              <div class="certificate-info">
+                <strong class="text-green">Python para Pentesters</strong>
+                <p class="text-soft">Hacker Mentor // 2023</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene-transition" id="transition-fish" aria-hidden="true">
+      <div class="scene-stage">
+        <div class="fish" style="--o:0;   --b:.30; --jump:-64vh">&gt;&lt;(((º&gt;</div>
+        <div class="fish" style="--o:.18; --b:.12; --jump:-46vh">&gt;&lt;(((º&gt;</div>
+        <div class="fish" style="--o:.36; --b:.42; --jump:-80vh">&gt;&lt;(((º&gt;</div>
+      </div>
+    </section>
+
+    <section class="content-panel scroll-reveal zoom-in" id="skills">
+      <h2 class="text-yellow">[ HABILIDADES_TÉCNICAS ]</h2>
+      <p>En el transcurso de mi carrera, he tomado inclinaciones hacia estas tecnologías, aunque no cubro todavía todos los campos, me encuentro en continuo aprendizaje para dominarlas totalemente.</p>
+      <div class="ascii-box">
+        <div class="skill-item" data-level="40">
+          <span class="text-lime">GNU/Linux (Syscalls, Comandos, Configuración del DE o WM):</span>
+          <div class="text-green skill-bar"></div>
+        </div>
+        <div class="skill-item" data-level="30">
+          <span class="text-lime">Backend (Java, MariaDB)1: </span>
+          <div class="text-green skill-bar"></div>
+        </div>
+        <div class="skill-item" data-level="45">
+          <span class="text-lime">Herramientas ( Git / Terminal):</span>
+          <div class="text-green skill-bar"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene-transition" id="transition-meteors" aria-hidden="true">
+      <div class="scene-stage">
+        <div class="meteor" style="--o:0;   --x:6vw;  --y:6vh">-----------*</div>
+        <div class="meteor" style="--o:.12; --x:28vw; --y:3vh">--------*</div>
+        <div class="meteor" style="--o:.24; --x:50vw; --y:9vh">------------*</div>
+        <div class="meteor" style="--o:.36; --x:16vw; --y:19vh">---------*</div>
+        <div class="meteor" style="--o:.48; --x:64vw; --y:14vh">-----------*</div>
+      </div>
+    </section>
+
+    <section class="content-panel" id="contact">
+      <div class="contact-header">
+        <h2 class="text-yellow scroll-reveal">[ CONTACTO ]</h2>
+        <span class="signal-icon" aria-hidden="true"><i>(</i><i class="signal-mid">(</i><i class="signal-center">&bull;</i><i class="signal-mid">)</i><i>)</i></span>
+      </div>
+      <p>Puedes escribirme directamente a través de cualquiera de estos medios:</p>
+
+      <div class="contact-list">
+        <a class="contact-link reveal-beam" style="--d:.12s" href="mailto:mathias.cruz@epn.edu.ec">
+          <span class="contact-icon">[@]</span>
+          <span class="contact-text"><small>Email</small><span>mathias.cruz@epn.edu.ec</span></span>
+          <span class="contact-arrow">&gt;&gt;</span>
+        </a>
+        <a class="contact-link reveal-beam" style="--d:.3s" href="https://github.com/grandote8x8" target="_blank" rel="noopener">
+          <span class="contact-icon">[gh]</span>
+          <span class="contact-text"><small>GitHub</small><span>github.com/grandote8x8</span></span>
+          <span class="contact-arrow">&gt;&gt;</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+  (() => {
+    const $  = (s, c = document) => c.querySelector(s);
+    const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+    const rgb = c => `rgb(${c[0]},${c[1]},${c[2]})`;
+    const rand = (a, b) => a + Math.random() * (b - a);
+
+    const picker = $('#photo-picker');
+    let targetGroup = null;
+
+    function setMissing(frame, missing) {
+      frame.classList.toggle('no-image', missing);
+      frame.tabIndex = missing ? 0 : -1;
+    }
+    $$('.photo-image').forEach(img => {
+      const frame = img.closest('.photo-frame');
+      img.addEventListener('load',  () => setMissing(frame, false));
+      img.addEventListener('error', () => setMissing(frame, true));
+      if (img.complete) setMissing(frame, img.naturalWidth === 0);
+    });
+
+    $$('.photo-frame').forEach(f => f.addEventListener('click', () => {
+      if (!f.classList.contains('no-image')) return;
+      targetGroup = f.dataset.group;
+      picker.value = '';
+      picker.click();
+    }));
+
+    picker.addEventListener('change', () => {
+      const file = picker.files[0];
+      if (!file || !targetGroup) return;
+      const url = URL.createObjectURL(file);
+      $$(`.photo-frame[data-group="${targetGroup}"]`).forEach(fr => {
+        fr.querySelector('img').src = url;
+        setMissing(fr, false);
+      });
+    });
+
+    const stars = $('#stars');
+    const starChars = ['.', '·', '*', '+', '˙'];
+    for (let i = 0; i < 110; i++) {
+      const s = document.createElement('i');
+      s.textContent = starChars[Math.floor(Math.random() * starChars.length)];
+      s.style.left = rand(0, 100) + '%';
+      s.style.top = rand(0, 100) + '%';
+      s.style.fontSize = rand(9, 16) + 'px';
+      s.style.animationDuration = rand(1.4, 4) + 's';
+      s.style.animationDelay = rand(0, 3) + 's';
+      stars.appendChild(s);
+    }
+
+    const flies = $('#fireflies');
+    for (let i = 0; i < 22; i++) {
+      const f = document.createElement('i');
+      f.textContent = '*';
+      f.style.left = rand(2, 98) + '%';
+      f.style.top = rand(55, 95) + '%';
+      f.style.fontSize = rand(10, 16) + 'px';
+      f.style.animationDuration = rand(3.5, 7) + 's';
+      f.style.animationDelay = rand(0, 4) + 's';
+      flies.appendChild(f);
+    }
+
+    $('.sand-foam').textContent = ".:.',.:'.:.,'.:.".repeat(120);
+
+    const sea = $('#sea');
+    let waveRows = [];
+    function buildSea() {
+      $$('.wave-row', sea).forEach(n => n.remove());
+      waveRows = [];
+      const rows = Math.max(4, Math.floor(sea.clientHeight / 24));
+      const pats = ['~^~-~^^~-', '≈~≈≈~≈~~', '~-~~^~-~^~', '-~~-~^~-~-'];
+      const cols = ['#3a683e', '#00ff66', '#a6ff00', '#f4ff9e', '#ffd700'];
+      for (let i = 0; i < rows; i++) {
+        const r = document.createElement('div');
+        r.className = 'wave-row';
+        r.style.top = (i * (100 / rows) + 1) + '%';
+        r.style.color = cols[Math.min(cols.length - 1, Math.floor(i / rows * cols.length))];
+        r.style.opacity = (0.35 + 0.55 * (i / rows)).toFixed(2);
+        const span = document.createElement('span');
+        span.textContent = pats[i % pats.length].repeat(60);
+        span.style.animationDuration = (5 + (i % 3) * 1.7) + 's';
+        span.style.animationDirection = i % 2 ? 'alternate-reverse' : 'alternate';
+        r.appendChild(span);
+        sea.appendChild(r);
+        waveRows.push({ el: r, speed: 30 + i * 45 });
+      }
+    }
+
+    const roles = ['Ciencias de la Computación'];
+    const typed = $('#typed-text');
+    let ri = 0, ci = 0, deleting = false;
+    (function type() {
+      if (reduce) { typed.textContent = roles[0]; return; }
+      const w = roles[ri];
+      typed.textContent = w.slice(0, ci);
+      if (!deleting && ci < w.length) { ci++; setTimeout(type, 65); }
+      else if (!deleting)             { deleting = true; setTimeout(type, 1700); }
+      else if (ci > 0)                { ci--; setTimeout(type, 30); }
+      else                            { deleting = false; ri = (ri + 1) % roles.length; setTimeout(type, 420); }
+    })();
+
+    const revealObs = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        [e.target, ...$$('.reveal-beam', e.target)].forEach(t => t.classList.add('active'));
+        obs.unobserve(e.target);
+      });
+    }, { threshold: 0.15 });
+    $$('.scroll-reveal, .contact-list').forEach(el => revealObs.observe(el));
+
+    const BAR_LEN = 28;
+    function drawBar(el, v) {
+      const f = Math.round(BAR_LEN * v / 100);
+      el.querySelector('.skill-bar').textContent =
+        '[' + '='.repeat(Math.max(0, f - 1)) + (f > 0 ? '>' : '') + ' '.repeat(BAR_LEN - f) + '] ' + Math.round(v) + '%';
+    }
+    const skillObs = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        obs.unobserve(e.target);
+        const el = e.target, lvl = +el.dataset.level;
+        if (reduce) { drawBar(el, lvl); return; }
+        const t0 = performance.now(), dur = 1100;
+        (function step(now) {
+          const k = clamp((now - t0) / dur);
+          drawBar(el, lvl * (1 - Math.pow(1 - k, 3)));
+          if (k < 1) requestAnimationFrame(step);
+        })(t0);
+      });
+    }, { threshold: 0.6 });
+    $$('.skill-item').forEach(el => { drawBar(el, 0); skillObs.observe(el); });
+
+    const root = document.documentElement;
+    const skyEl = $('#sky'), starsEl = $('#stars'), auroraEl = $('#aurora');
+    const moons = $$('.moon'), planet = $('#ringed-planet'), fireflies = $('#fireflies');
+    const suns = $$('.sun'), reflects = $$('.sun-reflection');
+    const gaps = $$('.scene-transition'), heroInner = $('.intro-content');
+    const bar = $('#progress-bar');
+    const planetGap = $('#transition-fish');
+
+    const cfg = [
+      { o: 0.18, k: 0.932, h: 0.62 },
+      { o: 0.42, k: 0.707, h: 0.50 },
+      { o: 0.66, k: 0.447, h: 0.40 }
+    ];
+
+    const NIGHT_TOP = [2, 6, 5],   NIGHT_BOT = [8, 20, 14];
+    const DAY_TOP   = [8, 44, 34], DAY_BOT   = [96, 116, 22];
+    const WARM      = [150, 96, 12];
+    const SEA_DAY_A = [15, 74, 52], SEA_DAY_B = [6, 35, 26];
+    const SEA_NIT_A = [4, 18, 13],  SEA_NIT_B = [2, 8, 6];
+
+    let vw = innerWidth, vh = innerHeight, horizonY = vh * 0.6, ticking = false;
+
+    function localProgress(el) {
+      const r = el.getBoundingClientRect();
+      return r.height > 0 ? clamp((vh - r.top) / r.height) : 0;
+    }
+
+    function update() {
+      ticking = false;
+      const y = window.scrollY;
+      const max = Math.max(1, root.scrollHeight - vh);
+      const p = clamp(y / max);
+      bar.style.width = (p * 100) + '%';
+
+      let day = 0;
+      suns.forEach((s, i) => {
+        const c = cfg[i];
+        const t = c.o + c.k * p;
+        const h = Math.sin(Math.PI * t);
+        const x = vw * (0.08 + 0.84 * t);
+        const yy = horizonY - h * c.h * horizonY;
+        const sc = 1 + clamp(1 - h, 0, 1) * 0.25;
+        s.style.transform = `translate(${x}px, ${yy}px) translate(-50%, -50%) scale(${sc})`;
+        s.style.opacity = (t < -0.1 || t > 1.1) ? 0 : 1;
+        day = Math.max(day, clamp(h * 1.6));
+        reflects[i].style.left = x + 'px';
+        reflects[i].style.opacity = clamp(h) * 0.75;
+      });
+
+      const night = 1 - day;
+      const warmK = clamp(1 - Math.abs(day - 0.4) / 0.4) * 0.5;
+      const top = mix(NIGHT_TOP, DAY_TOP, day);
+      const bot = mix(mix(NIGHT_BOT, DAY_BOT, day), WARM, warmK);
+      skyEl.style.background = `linear-gradient(${rgb(top)}, ${rgb(bot)} ${horizonY}px)`;
+      sea.style.setProperty('--sea-a', rgb(mix(SEA_NIT_A, SEA_DAY_A, day)));
+      sea.style.setProperty('--sea-b', rgb(mix(SEA_NIT_B, SEA_DAY_B, day)));
+      starsEl.style.opacity = (0.05 + 0.95 * night).toFixed(3);
+      const n = Math.pow(night, 1.5);
+      auroraEl.style.opacity = (n * 0.85).toFixed(3);
+      fireflies.style.opacity = n.toFixed(3);
+      moons.forEach(m => { m.style.opacity = n.toFixed(3); });
+
+      waveRows.forEach(r => { r.el.style.transform = `translateX(${(-p * r.speed).toFixed(1)}px)`; });
+
+      const pl = localProgress(planetGap);
+      const rise = 1 - Math.pow(1 - clamp(pl * 1.4), 2);
+      const px = vw * 0.72;
+      const py = horizonY + 90 - rise * (0.46 * horizonY + 90);
+      planet.style.transform = `translate(${px}px, ${py}px) translate(-50%, -50%)`;
+      planet.style.opacity = rise > 0.01 ? 1 : 0;
+
+      gaps.forEach(g => {
+        const r = g.getBoundingClientRect();
+        if (r.bottom > -120 && r.top < vh + 120) {
+          g.style.setProperty('--lp', localProgress(g).toFixed(4));
+        }
+      });
+
+      const hk = clamp(y / (vh * 0.55));
+      heroInner.style.opacity = (1 - hk).toFixed(3);
+      heroInner.style.transform = `translateY(${(y * -0.25).toFixed(1)}px)`;
+    }
+
+    function measure() {
+      vw = innerWidth;
+      vh = innerHeight;
+      horizonY = sea.getBoundingClientRect().top;
+      padForLast();
+      buildSea();
+      update();
+    }
+
+    function onScroll() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }
+
+    const nav = $('#top-bar');
+    const lastSection = $$('.central-container > section[id]').pop();
+    const main = $('.central-container');
+
+    const navGap = () => Math.max(
+      parseFloat(getComputedStyle(root).getPropertyValue('--nav-h')) || 0,
+      nav.getBoundingClientRect().height
+    ) + 28;
+
+    function padForLast() {
+      const need = vh - lastSection.offsetHeight - navGap();
+      main.style.paddingBottom = Math.max(70, need) + 'px';
+    }
+
+    const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+    let glide = 0;
+    const stopGlide = () => { if (glide) { cancelAnimationFrame(glide); glide = 0; } };
+
+    function glideTo(el) {
+      stopGlide();
+      const from = scrollY;
+      const to = clamp(from + el.getBoundingClientRect().top - navGap(), 0, root.scrollHeight - vh);
+      const dist = Math.abs(to - from);
+      if (reduce || dist < 2) { scrollTo(0, to); return; }
+
+      const dur = clamp(380 + dist / vh * 320, 380, 700);
+      const t0 = performance.now();
+      (function step(now) {
+        const k = clamp((now - t0) / dur);
+        scrollTo(0, from + (to - from) * easeOutCubic(k));
+        if (k < 1) glide = requestAnimationFrame(step);
+      })(t0);
+    }
+
+    $$('#top-bar a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+      const el = document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)));
+      if (!el) return;
+      e.preventDefault();
+      history.pushState(null, '', '#' + el.id);
+      padForLast();
+      el.classList.add('active');
+      $$('.scroll-reveal, .reveal-beam', el).forEach(n => n.classList.add('active'));
+      glideTo(el);
+    }));
+
+    addEventListener('hashchange', () => {
+      const id = decodeURIComponent(location.hash.slice(1));
+      const el = id && document.getElementById(id);
+      if (el) glideTo(el);
+    });
+
+    ['wheel', 'touchstart'].forEach(ev => addEventListener(ev, stopGlide, { passive: true }));
+    addEventListener('keydown', e => {
+      if (['PageUp', 'PageDown', 'Home', 'End', ' ', 'ArrowUp', 'ArrowDown'].includes(e.key)) stopGlide();
+    });
+
+    const certBtn = $('#certificates-button'), drawer = $('#certificates-content');
+    certBtn.addEventListener('click', () => {
+      const open = drawer.classList.toggle('open');
+      certBtn.setAttribute('aria-expanded', open);
+      $('.toggle-label', certBtn).textContent = open ? 'Ocultar certificados' : 'Ver certificados';
+      $('.toggle-icon', certBtn).textContent = open ? '[-]' : '[+]';
+
+      if (open) {
+        const r = certBtn.getBoundingClientRect();
+        if (r.top > vh * 0.5) {
+          window.scrollBy({ top: r.top - vh * 0.3, behavior: reduce ? 'auto' : 'smooth' });
+        }
+      }
+
+      const t0 = performance.now();
+      (function loop(now) {
+        update();
+        if (now - t0 < 1000) requestAnimationFrame(loop);
+      })(t0);
+    });
+
+    const CERT_KEY = 'portafolio:cert:';
+    const normUrl = v => {
+      const s = v.trim();
+      if (!s) return '';
+      if (/^https?:\/\//i.test(s)) return s;
+      return s.startsWith('//') ? 'https:' + s : 'https://' + s;
+    };
+
+    $$('.certificate-url-input').forEach(inp => {
+      const id = inp.dataset.cert;
+      const link = $(`.certificate-link[data-cert="${id}"]`);
+      const key = CERT_KEY + id;
+
+      const sync = () => {
+        const url = normUrl(inp.value);
+        link.hidden = !url;
+        if (url) link.href = url;
+      };
+
+      const hardcoded = link.getAttribute('href') || '';
+      inp.value = localStorage.getItem(key) || (/^https?:\/\//i.test(hardcoded) ? hardcoded : '');
+      inp.addEventListener('input', () => { localStorage.setItem(key, inp.value.trim()); sync(); });
+      inp.addEventListener('blur',  () => { inp.value = normUrl(inp.value); localStorage.setItem(key, inp.value); sync(); });
+      sync();
+    });
+
+    let resizeT;
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(measure, 120); });
+    addEventListener('load', measure);
+    measure();
+  })();
+  </script>
+</body>
+</html>
